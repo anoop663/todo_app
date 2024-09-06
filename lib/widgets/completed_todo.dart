@@ -109,6 +109,7 @@ class CompletedTodo extends StatelessWidget {
                             ),
                             onPressed: () {
                               bool isPersonal = !todo['is_personal'];
+                              bool isDone = !todo['is_done'];
                               context.read<TodoBloc>().add(
                                     ToggleFavorite(index: index),
                                   );
@@ -119,6 +120,7 @@ class CompletedTodo extends StatelessWidget {
                                       description: todo['description'],
                                       date: todo['completed_at'],
                                       isPersonal: isPersonal,
+                                      isDone: isDone,
                                     ),
                                   );
                             },

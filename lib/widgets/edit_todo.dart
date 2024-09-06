@@ -103,6 +103,7 @@ class EditTodo extends StatelessWidget {
                             title: nameController.text,
                             description: descriptionController.text,
                             date: dateFormat.format(date),
+                            isDone: false,
                           ),
                         );
                       } else {

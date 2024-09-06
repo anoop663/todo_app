@@ -61,11 +61,40 @@ class TodoListPage extends StatelessWidget {
                   final todo = state.todos[index];
                   return Card(
                     color: Colors.black,
-                    elevation: 4,
+                    elevation: 5,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: ListTile(
+                      leading: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Checkbox(
+                            value: todo['is_done'] ?? false,
+                            onChanged: (value) {
+                              context.read<TodoBloc>().add(
+                                    UpdateTodo(
+                                      id: todo['id'],
+                                      title: todo['name'],
+                                      description: todo['description'],
+                                      date: todo['completed_at'],
+                                      isDone: value ?? false,
+                                    ),
+                                  );
+                            },
+                            checkColor: Colors.black,
+                            activeColor: Colors.yellowAccent,
+                          ),
+                          const Text(
+                            'Mark as completed',
+                            style: TextStyle(
+                              fontSize: 6,
+                              color: Colors.yellowAccent,
+                            ),
+                          ),
+                        ],
+                      ),
+                      
                       title: Text(
                         todo['name'] ?? 'Untitled',
                         style: const TextStyle(color: Colors.yellowAccent),
@@ -83,6 +112,7 @@ class TodoListPage extends StatelessWidget {
                           ),
                         ],
                       ),
+                      
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -97,6 +127,7 @@ class TodoListPage extends StatelessWidget {
                             ),
                             onPressed: () {
                               bool isPersonal = !todo['is_personal'];
+                              bool isDone = !todo['is_done'];
                               context.read<TodoBloc>().add(
                                     ToggleFavorite(index: index),
                                   );
@@ -107,6 +138,7 @@ class TodoListPage extends StatelessWidget {
                                       description: todo['description'],
                                       date: todo['completed_at'],
                                       isPersonal: isPersonal,
+                                      isDone: isDone,
                                     ),
                                   );
                             },
@@ -163,7 +195,7 @@ class TodoListPage extends StatelessWidget {
               ),
               builder: (context) => const FractionallySizedBox(
                 heightFactor: 0.75,
-                child:  AddTodoPage(
+                child: AddTodoPage(
                   todo: {},
                 ),
               ),

@@ -29,9 +29,9 @@ class FormUpdated extends TodoEvent {
   final String description;
   final String date;
 
-  FormUpdated({required this.title, required this.description, required this.date});
+  FormUpdated(
+      {required this.title, required this.description, required this.date});
 }
-
 
 class ToggleFavorite extends TodoEvent {
   final int index;
@@ -44,12 +44,14 @@ class UpdateTodo extends TodoEvent {
   final String title;
   final String description;
   final String date;
+  final bool isDone;
 
   UpdateTodo({
     required this.id,
     required this.title,
     required this.description,
     required this.date,
+    required this.isDone,
   });
 }
 
@@ -65,6 +67,7 @@ class UpdateFavorite extends TodoEvent {
   final String description;
   final String date;
   final bool isPersonal;
+  final bool isDone;
 
   UpdateFavorite({
     required this.id,
@@ -72,5 +75,6 @@ class UpdateFavorite extends TodoEvent {
     required this.title,
     required this.description,
     required this.date,
+    required this.isDone,
   });
 }

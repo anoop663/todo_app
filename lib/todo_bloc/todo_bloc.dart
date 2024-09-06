@@ -36,6 +36,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
             'description': item['description'] ?? '',
             'completed_at': item['completed_at'] ?? 'No date',
             'is_personal': item['is_personal'] ?? false,
+            'is_done': item['is_done'] ?? false,
           };
         }).toList();
 
@@ -100,6 +101,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           'name': event.title,
           'description': event.description,
           'completed_at': event.date,
+          'is_done' : event.isDone,
         }),
       );
 
