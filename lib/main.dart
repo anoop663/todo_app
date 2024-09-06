@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_todo/todo_bloc/navig_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_application_todo/todo_bloc/todo_bloc.dart';
 import 'package:flutter_application_todo/widgets/bottom_navigation.dart';
@@ -12,10 +13,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => TodoBloc(),
-      //create: (context) => TodoBloc(),
-      child: const MaterialApp(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => NavigationCubit()), 
+        BlocProvider(create: (_) => TodoBloc()),
+      ],
+      child: MaterialApp(
         home: Scaffold(
           body: Center(
             child: BottomNavigate(),

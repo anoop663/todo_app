@@ -31,7 +31,7 @@ class CompletedTodo extends StatelessWidget {
               return Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('Completed Todo List'),
+                  const Text('Due date over list'),
                   Chip(
                     label: Text(
                       '$todoCount',
