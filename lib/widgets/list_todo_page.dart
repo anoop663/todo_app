@@ -59,120 +59,127 @@ class TodoListPage extends StatelessWidget {
                 itemCount: state.todos.length,
                 itemBuilder: (context, index) {
                   final todo = state.todos[index];
-                  return Card(
-                    color: Colors.black,
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: ListTile(
-                      leading: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Checkbox(
-                            value: todo['is_done'] ?? false,
-                            onChanged: (value) {
-                              context.read<TodoBloc>().add(
-                                    UpdateTodo(
-                                      id: todo['id'],
-                                      title: todo['name'],
-                                      description: todo['description'],
-                                      date: todo['completed_at'],
-                                      isDone: value ?? false,
-                                    ),
-                                  );
-                            },
-                            checkColor: Colors.black,
-                            activeColor: Colors.yellowAccent,
-                          ),
-                          const Text(
-                            'Mark as completed',
-                            style: TextStyle(
-                              fontSize: 6,
-                              color: Colors.yellowAccent,
+                  return Container(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Card(
+                      color: Colors.black,
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ListTile(
+                        leading: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                              value: todo['is_done'] ?? false,
+                              onChanged: (value) {
+                                context.read<TodoBloc>().add(
+                                      UpdateTodo(
+                                        id: todo['id'],
+                                        title: todo['name'],
+                                        description: todo['description'],
+                                        date: todo['completed_at'],
+                                        isDone: value ?? false,
+                                      ),
+                                    );
+                              },
+                              checkColor: Colors.black,
+                              activeColor: Colors.yellowAccent,
                             ),
-                          ),
-                        ],
-                      ),
-                      
-                      title: Text(
-                        todo['name'] ?? 'Untitled',
-                        style: const TextStyle(color: Colors.yellowAccent),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            todo['description'] ?? '',
-                            style: const TextStyle(color: Colors.yellowAccent),
-                          ),
-                          Text(
-                            todo['completed_at'] ?? '',
-                            style: const TextStyle(color: Colors.yellowAccent),
-                          ),
-                        ],
-                      ),
-                      
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              todo['is_personal']
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: todo['is_personal']
-                                  ? Colors.red
-                                  : Colors.yellowAccent,
-                            ),
-                            onPressed: () {
-                              bool isPersonal = !todo['is_personal'];
-                              bool isDone = !todo['is_done'];
-                              context.read<TodoBloc>().add(
-                                    ToggleFavorite(index: index),
-                                  );
-                              context.read<TodoBloc>().add(
-                                    UpdateFavorite(
-                                      id: todo['id'],
-                                      title: todo['name'],
-                                      description: todo['description'],
-                                      date: todo['completed_at'],
-                                      isPersonal: isPersonal,
-                                      isDone: isDone,
-                                    ),
-                                  );
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.edit,
-                                color: Colors.yellowAccent),
-                            onPressed: () {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(25.0)),
+                            const Flexible(
+                              child: Text(
+                                'Completed',
+                                style: TextStyle(
+                                  fontSize: 7,
+                                  color: Colors.yellowAccent,
                                 ),
-                                builder: (context) => FractionallySizedBox(
-                                  heightFactor: 0.75,
-                                  child: EditTodo(
-                                    todo: todo,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: Text(
+                          todo['name'] ?? 'Untitled',
+                          style: const TextStyle(color: Colors.yellowAccent),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              todo['description'] ?? '',
+                              style:
+                                  const TextStyle(color: Colors.yellowAccent),
+                            ),
+                            Text(
+                              todo['completed_at'] ?? '',
+                              style:
+                                  const TextStyle(color: Colors.yellowAccent),
+                            ),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                todo['is_personal']
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: todo['is_personal']
+                                    ? Colors.red
+                                    : Colors.yellowAccent,
+                              ),
+                              onPressed: () {
+                                bool isPersonal = !todo['is_personal'];
+                                bool isDone = !todo['is_done'];
+                                context.read<TodoBloc>().add(
+                                      ToggleFavorite(index: index),
+                                    );
+                                context.read<TodoBloc>().add(
+                                      UpdateFavorite(
+                                        id: todo['id'],
+                                        title: todo['name'],
+                                        description: todo['description'],
+                                        date: todo['completed_at'],
+                                        isPersonal: isPersonal,
+                                        isDone: isDone,
+                                      ),
+                                    );
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit,
+                                  color: Colors.yellowAccent),
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(25.0)),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete,
-                                color: Colors.yellowAccent),
-                            onPressed: () {
-                              context
-                                  .read<TodoBloc>()
-                                  .add(DeleteTodo(id: todo['id']));
-                            },
-                          ),
-                        ],
+                                  builder: (context) => FractionallySizedBox(
+                                    heightFactor: 0.75,
+                                    child: EditTodo(
+                                      todo: todo,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete,
+                                  color: Colors.yellowAccent),
+                              onPressed: () {
+                                context
+                                    .read<TodoBloc>()
+                                    .add(DeleteTodo(id: todo['id']));
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
