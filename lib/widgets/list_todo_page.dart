@@ -170,6 +170,7 @@ class TodoListPage extends StatelessWidget {
             );
 
             if (result == true) {
+              // ignore: use_build_context_synchronously
               context.read<TodoBloc>().add(LoadTodos());
             }
           },

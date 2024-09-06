@@ -13,10 +13,10 @@ class EditTodo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _nameController = TextEditingController(text: todo['name']);
-    final _descriptionController = TextEditingController(text: todo['description']);
-    final _dateController = TextEditingController(text: todo['completed_at']);
-    final DateFormat _dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final nameController = TextEditingController(text: todo['name']);
+    final descriptionController = TextEditingController(text: todo['description']);
+    final dateController = TextEditingController(text: todo['completed_at']);
+    final DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
 
     return Scaffold(
       appBar: AppBar(
@@ -41,37 +41,37 @@ class EditTodo extends StatelessWidget {
           child: BlocBuilder<TodoBloc, TodoState>(
             builder: (context, state) {
               if (state is FormState1) {
-                _nameController.text = state.title;
-                _descriptionController.text = state.description;
-                _dateController.text = state.date;
+                nameController.text = state.title;
+                descriptionController.text = state.description;
+                dateController.text = state.date;
               }
 
               return Column(
                 children: [
                   TextFormField(
-                    controller: _nameController,
+                    controller: nameController,
                     decoration: const InputDecoration(labelText: 'Name'),
                     onChanged: (value) {
                       context.read<TodoBloc>().add(FormUpdated(
                             title: value,
-                            description: _descriptionController.text,
-                            date: _dateController.text,
+                            description: descriptionController.text,
+                            date: dateController.text,
                           ));
                     },
                   ),
                   TextFormField(
-                    controller: _descriptionController,
+                    controller: descriptionController,
                     decoration: const InputDecoration(labelText: 'Description'),
                     onChanged: (value) {
                       context.read<TodoBloc>().add(FormUpdated(
-                            title: _nameController.text,
+                            title: nameController.text,
                             description: value,
-                            date: _dateController.text,
+                            date: dateController.text,
                           ));
                     },
                   ),
                   TextFormField(
-                    controller: _dateController,
+                    controller: dateController,
                     decoration: const InputDecoration(labelText: 'Due date'),
                     readOnly: true,
                     onTap: () {
@@ -79,12 +79,12 @@ class EditTodo extends StatelessWidget {
                         context,
                         showTitleActions: true,
                         onConfirm: (date) {
-                          final formattedDate = _dateFormat.format(date);
-                          _dateController.text = formattedDate;
+                          final formattedDate = dateFormat.format(date);
+                          dateController.text = formattedDate;
                           context.read<TodoBloc>().add(FormUpdated(
-                                title: _nameController.text,
-                                description: _descriptionController.text,
-                                date: _dateController.text,
+                                title: nameController.text,
+                                description: descriptionController.text,
+                                date: dateController.text,
                               ));
                         },
                         currentTime: DateTime.now(),
@@ -95,14 +95,14 @@ class EditTodo extends StatelessWidget {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      final date = DateTime.tryParse(_dateController.text);
+                      final date = DateTime.tryParse(dateController.text);
                       if (date != null) {
                         context.read<TodoBloc>().add(
                           UpdateTodo(
                             id: todo['id'],
-                            title: _nameController.text,
-                            description: _descriptionController.text,
-                            date: _dateFormat.format(date),
+                            title: nameController.text,
+                            description: descriptionController.text,
+                            date: dateFormat.format(date),
                           ),
                         );
                       } else {
