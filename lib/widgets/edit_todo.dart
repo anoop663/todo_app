@@ -96,8 +96,6 @@ class EditTodo extends StatelessWidget {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      bool isPersonal = !todo['is_personal'];
-                      bool isDone = !todo['is_done'];
                       final date = DateTime.tryParse(dateController.text);
                       if (date != null) {
                         context.read<TodoBloc>().add(
@@ -106,8 +104,8 @@ class EditTodo extends StatelessWidget {
                                 title: nameController.text,
                                 description: descriptionController.text,
                                 date: dateFormat.format(date),
-                                isPersonal: isPersonal,
-                                isDone: isDone,
+                                isPersonal: true,
+                                isDone: true,
                               ),
                             );
                       } else {

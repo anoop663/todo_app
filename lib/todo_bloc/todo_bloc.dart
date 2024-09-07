@@ -193,4 +193,5 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       date: event.date,
     ));
   }
+
 }

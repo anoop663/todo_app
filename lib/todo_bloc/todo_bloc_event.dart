@@ -45,13 +45,15 @@ class UpdateTodo extends TodoEvent {
   final String description;
   final String date;
   final bool isDone;
+  final bool isPersonal;
 
   UpdateTodo({
     required this.id,
     required this.title,
     required this.description,
     required this.date,
-    required this.isDone, required bool isPersonal,
+    required this.isDone,
+    required this.isPersonal,
   });
 }
 
