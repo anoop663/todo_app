@@ -71,21 +71,28 @@ class TodoListPage extends StatelessWidget {
                         leading: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Checkbox(
-                              value: todo['is_done'] ?? false,
-                              onChanged: (value) {
-                                context.read<TodoBloc>().add(
-                                      UpdateTodo(
-                                        id: todo['id'],
-                                        title: todo['name'],
-                                        description: todo['description'],
-                                        date: todo['completed_at'],
-                                        isDone: value ?? false,
-                                      ),
-                                    );
+                            BlocBuilder<TodoBloc, TodoState>(
+                              builder: (context, state) {
+                                return Checkbox(
+                                  value: todo['is_done'] ?? false,
+                                  onChanged: (value) {
+                                    bool isPersonal = !todo['is_personal'];
+                                    bool isDone = !todo['is_done'];
+                                    context.read<TodoBloc>().add(
+                                          UpdateTodo(
+                                            id: todo['id'],
+                                            title: todo['name'],
+                                            description: todo['description'],
+                                            date: todo['completed_at'],
+                                            isPersonal: isPersonal,
+                                            isDone: isDone,
+                                          ),
+                                        );
+                                  },
+                                  checkColor: Colors.black,
+                                  activeColor: Colors.yellowAccent,
+                                );
                               },
-                              checkColor: Colors.black,
-                              activeColor: Colors.yellowAccent,
                             ),
                             const Flexible(
                               child: Text(

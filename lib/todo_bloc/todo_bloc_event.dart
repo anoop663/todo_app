@@ -51,7 +51,7 @@ class UpdateTodo extends TodoEvent {
     required this.title,
     required this.description,
     required this.date,
-    required this.isDone,
+    required this.isDone, required bool isPersonal,
   });
 }
 

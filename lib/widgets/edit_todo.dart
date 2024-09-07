@@ -14,7 +14,8 @@ class EditTodo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nameController = TextEditingController(text: todo['name']);
-    final descriptionController = TextEditingController(text: todo['description']);
+    final descriptionController =
+        TextEditingController(text: todo['description']);
     final dateController = TextEditingController(text: todo['completed_at']);
     final DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
 
@@ -95,17 +96,20 @@ class EditTodo extends StatelessWidget {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
+                      bool isPersonal = !todo['is_personal'];
+                      bool isDone = !todo['is_done'];
                       final date = DateTime.tryParse(dateController.text);
                       if (date != null) {
                         context.read<TodoBloc>().add(
-                          UpdateTodo(
-                            id: todo['id'],
-                            title: nameController.text,
-                            description: descriptionController.text,
-                            date: dateFormat.format(date),
-                            isDone: false,
-                          ),
-                        );
+                              UpdateTodo(
+                                id: todo['id'],
+                                title: nameController.text,
+                                description: descriptionController.text,
+                                date: dateFormat.format(date),
+                                isPersonal: isPersonal,
+                                isDone: isDone,
+                              ),
+                            );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Invalid date format')),
