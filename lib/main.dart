@@ -16,7 +16,9 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => NavigationCubit()), 
-        BlocProvider(create: (_) => TodoBloc()),
+        BlocProvider(
+          lazy: false,
+          create: (_) => TodoBloc()),
       ],
       child: MaterialApp(
         home: Scaffold(
