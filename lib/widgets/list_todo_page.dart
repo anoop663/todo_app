@@ -15,17 +15,20 @@ class TodoListPage extends StatelessWidget {
       appBar: AppBar(
         title: BlocBuilder<TodoBloc, TodoState>(
           builder: (context, state) {
-            int todoCount = 0;
+            int incompleteCount = 0;
             if (state is TodoLoaded) {
-              todoCount = state.todos.length;
+              // Count only incomplete tasks
+              incompleteCount = state.todos
+                  .where((todo) => !(todo['is_done'] ?? false))
+                  .length;
             }
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Todo List'),
+                const Text('Incomplete Tasks'),
                 Chip(
                   label: Text(
-                    '$todoCount',
+                    '$incompleteCount',
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -53,10 +56,19 @@ class TodoListPage extends StatelessWidget {
           if (state is TodoLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is TodoLoaded) {
+            // Filter the todos to show only those where is_done is false (incomplete)
+            final incompleteTodos = state.todos
+                .where((todo) => !(todo['is_done'] ?? false))
+                .toList();
+
+            if (incompleteTodos.isEmpty) {
+              return const Center(child: Text('No incomplete tasks.'));
+            }
+
             return ListView.builder(
-              itemCount: state.todos.length,
+              itemCount: incompleteTodos.length,
               itemBuilder: (context, index) {
-                final todo = state.todos[index];
+                final todo = incompleteTodos[index];
                 return Container(
                   padding: const EdgeInsets.only(bottom: 4),
                   child: Card(
