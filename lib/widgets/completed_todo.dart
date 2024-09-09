@@ -17,7 +17,6 @@ class CompletedTodo extends StatelessWidget {
           builder: (context, state) {
             int completeCount = 0;
             if (state is TodoLoaded) {
-              // Count only completed tasks where is_done == true
               completeCount = state.todos
                   .where((todo) => todo['is_done'] ?? false)
                   .length;

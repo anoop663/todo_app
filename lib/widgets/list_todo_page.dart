@@ -17,7 +17,6 @@ class TodoListPage extends StatelessWidget {
           builder: (context, state) {
             int incompleteCount = 0;
             if (state is TodoLoaded) {
-              // Count only incomplete tasks
               incompleteCount = state.todos
                   .where((todo) => !(todo['is_done'] ?? false))
                   .length;
@@ -56,7 +55,6 @@ class TodoListPage extends StatelessWidget {
           if (state is TodoLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is TodoLoaded) {
-            // Filter the todos to show only those where is_done is false (incomplete)
             final incompleteTodos = state.todos
                 .where((todo) => !(todo['is_done'] ?? false))
                 .toList();
