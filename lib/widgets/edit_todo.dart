@@ -52,7 +52,7 @@ class EditTodo extends StatelessWidget {
                   TextFormField(
                     controller: nameController,
                     decoration: const InputDecoration(labelText: 'Name'),
-                    onChanged: (value) {
+                    onFieldSubmitted: (value) {
                       context.read<TodoBloc>().add(FormUpdated(
                             title: value,
                             description: descriptionController.text,
@@ -63,7 +63,7 @@ class EditTodo extends StatelessWidget {
                   TextFormField(
                     controller: descriptionController,
                     decoration: const InputDecoration(labelText: 'Description'),
-                    onChanged: (value) {
+                    onFieldSubmitted: (value) {
                       context.read<TodoBloc>().add(FormUpdated(
                             title: nameController.text,
                             description: value,

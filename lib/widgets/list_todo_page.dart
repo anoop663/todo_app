@@ -11,218 +11,213 @@ class TodoListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => TodoBloc()..add(LoadTodos()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: BlocBuilder<TodoBloc, TodoState>(
-            builder: (context, state) {
-              int todoCount = 0;
-              if (state is TodoLoaded) {
-                todoCount = state.todos.length;
-              }
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Todo List'),
-                  Chip(
-                    label: Text(
-                      '$todoCount',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    backgroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+    return Scaffold(
+      appBar: AppBar(
+        title: BlocBuilder<TodoBloc, TodoState>(
+          builder: (context, state) {
+            int todoCount = 0;
+            if (state is TodoLoaded) {
+              todoCount = state.todos.length;
+            }
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Todo List'),
+                Chip(
+                  label: Text(
+                    '$todoCount',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              );
-            },
-          ),
-          backgroundColor: Colors.yellowAccent,
-        ),
-        body: BlocConsumer<TodoBloc, TodoState>(
-          listener: (context, state) {
-            if (state is TodoSuccess) {
-              context.read<TodoBloc>().add(LoadTodos());
-            }
+                  backgroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+              ],
+            );
           },
-          builder: (context, state) {
-            if (state is TodoLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is TodoLoaded) {
-              return ListView.builder(
-                itemCount: state.todos.length,
-                itemBuilder: (context, index) {
-                  final todo = state.todos[index];
-                  return Container(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Card(
-                      color: Colors.black,
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+        ),
+        backgroundColor: Colors.yellowAccent,
+      ),
+      body: BlocConsumer<TodoBloc, TodoState>(
+        listener: (context, state) {
+          if (state is TodoSuccess) {
+            context.read<TodoBloc>().add(LoadTodos());
+          }
+        },
+        builder: (context, state) {
+          if (state is TodoLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is TodoLoaded) {
+            return ListView.builder(
+              itemCount: state.todos.length,
+              itemBuilder: (context, index) {
+                final todo = state.todos[index];
+                return Container(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Card(
+                    color: Colors.black,
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ListTile(
+                      leading: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          BlocBuilder<TodoBloc, TodoState>(
+                            builder: (context, state) {
+                              return Checkbox(
+                                value: todo['is_done'] ?? false,
+                                onChanged: (value) {
+                                  bool isPersonal = !todo['is_personal'];
+                                  bool isDone = !todo['is_done'];
+                                  context.read<TodoBloc>().add(
+                                        UpdateTodo(
+                                          id: todo['id'],
+                                          title: todo['name'],
+                                          description: todo['description'],
+                                          date: todo['completed_at'],
+                                          isPersonal: isPersonal,
+                                          isDone: isDone,
+                                        ),
+                                      );
+                                },
+                                checkColor: Colors.black,
+                                activeColor: Colors.yellowAccent,
+                              );
+                            },
+                          ),
+                          const Flexible(
+                            child: Text(
+                              'Completed',
+                              style: TextStyle(
+                                fontSize: 7,
+                                color: Colors.yellowAccent,
+                              ),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
-                      child: ListTile(
-                        leading: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            BlocBuilder<TodoBloc, TodoState>(
-                              builder: (context, state) {
-                                return Checkbox(
-                                  value: todo['is_done'] ?? false,
-                                  onChanged: (value) {
-                                    bool isPersonal = !todo['is_personal'];
-                                    bool isDone = !todo['is_done'];
-                                    context.read<TodoBloc>().add(
-                                          UpdateTodo(
-                                            id: todo['id'],
-                                            title: todo['name'],
-                                            description: todo['description'],
-                                            date: todo['completed_at'],
-                                            isPersonal: isPersonal,
-                                            isDone: isDone,
-                                          ),
-                                        );
-                                  },
-                                  checkColor: Colors.black,
-                                  activeColor: Colors.yellowAccent,
-                                );
-                              },
+                      title: Text(
+                        todo['name'] ?? 'Untitled',
+                        style: const TextStyle(color: Colors.yellowAccent),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            todo['description'] ?? '',
+                            style: const TextStyle(color: Colors.yellowAccent),
+                          ),
+                          Text(
+                            todo['completed_at'] ?? '',
+                            style: const TextStyle(color: Colors.yellowAccent),
+                          ),
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              todo['is_personal']
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: todo['is_personal']
+                                  ? Colors.red
+                                  : Colors.yellowAccent,
                             ),
-                            const Flexible(
-                              child: Text(
-                                'Completed',
-                                style: TextStyle(
-                                  fontSize: 7,
-                                  color: Colors.yellowAccent,
-                                ),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        title: Text(
-                          todo['name'] ?? 'Untitled',
-                          style: const TextStyle(color: Colors.yellowAccent),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              todo['description'] ?? '',
-                              style:
-                                  const TextStyle(color: Colors.yellowAccent),
-                            ),
-                            Text(
-                              todo['completed_at'] ?? '',
-                              style:
-                                  const TextStyle(color: Colors.yellowAccent),
-                            ),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                todo['is_personal']
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: todo['is_personal']
-                                    ? Colors.red
-                                    : Colors.yellowAccent,
-                              ),
-                              onPressed: () {
-                                bool isPersonal = !todo['is_personal'];
-                                bool isDone = !todo['is_done'];
-                                context.read<TodoBloc>().add(
-                                      ToggleFavorite(index: index),
-                                    );
-                                context.read<TodoBloc>().add(
-                                      UpdateFavorite(
-                                        id: todo['id'],
-                                        title: todo['name'],
-                                        description: todo['description'],
-                                        date: todo['completed_at'],
-                                        isPersonal: isPersonal,
-                                        isDone: isDone,
-                                      ),
-                                    );
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.edit,
-                                  color: Colors.yellowAccent),
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(25.0)),
-                                  ),
-                                  builder: (context) => FractionallySizedBox(
-                                    heightFactor: 0.75,
-                                    child: EditTodo(
-                                      todo: todo,
+                            onPressed: () {
+                              bool isPersonal = !todo['is_personal'];
+                              bool isDone = !todo['is_done'];
+                              context.read<TodoBloc>().add(
+                                    ToggleFavorite(index: index),
+                                  );
+                              context.read<TodoBloc>().add(
+                                    UpdateFavorite(
+                                      id: todo['id'],
+                                      title: todo['name'],
+                                      description: todo['description'],
+                                      date: todo['completed_at'],
+                                      isPersonal: isPersonal,
+                                      isDone: isDone,
                                     ),
+                                  );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.edit,
+                                color: Colors.yellowAccent),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(25.0)),
+                                ),
+                                builder: (context) => FractionallySizedBox(
+                                  heightFactor: 0.75,
+                                  child: EditTodo(
+                                    todo: todo,
                                   ),
-                                );
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete,
-                                  color: Colors.yellowAccent),
-                              onPressed: () {
-                                context
-                                    .read<TodoBloc>()
-                                    .add(DeleteTodo(id: todo['id']));
-                              },
-                            ),
-                          ],
-                        ),
+                                ),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete,
+                                color: Colors.yellowAccent),
+                            onPressed: () {
+                              context
+                                  .read<TodoBloc>()
+                                  .add(DeleteTodo(id: todo['id']));
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-              );
-            } else if (state is TodoError) {
-              return Center(child: Text(state.message));
-            }
-
-            return Container();
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final result = await showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-              ),
-              builder: (context) => const FractionallySizedBox(
-                heightFactor: 0.75,
-                child: AddTodoPage(
-                  todo: {},
-                ),
-              ),
+                  ),
+                );
+              },
             );
+          } else if (state is TodoError) {
+            return Center(child: Text(state.message));
+          }
 
-            if (result == true) {
-              // ignore: use_build_context_synchronously
-              context.read<TodoBloc>().add(LoadTodos());
-            }
-          },
-          backgroundColor: Colors.yellowAccent,
-          child: const Icon(Icons.add, color: Colors.black),
-        ),
+          return Container();
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+            ),
+            builder: (context) => const FractionallySizedBox(
+              heightFactor: 0.75,
+              child: AddTodoPage(
+                todo: {},
+              ),
+            ),
+          );
+
+          if (result == true) {
+            // ignore: use_build_context_synchronously
+            context.read<TodoBloc>().add(LoadTodos());
+          }
+        },
+        backgroundColor: Colors.yellowAccent,
+        child: const Icon(Icons.add, color: Colors.black),
       ),
     );
   }
