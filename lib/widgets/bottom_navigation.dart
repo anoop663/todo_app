@@ -48,7 +48,7 @@ class BottomNavigate extends StatelessWidget {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.check_circle),
-                label: 'Due date over',
+                label: 'completed',
               ),
             ],
           );
