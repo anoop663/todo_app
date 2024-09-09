@@ -222,11 +222,6 @@ class CompletedTodo extends StatelessWidget {
               ),
             ),
           );
-
-          if (result == true) {
-            // ignore: use_build_context_synchronously
-            context.read<TodoBloc>().add(LoadTodos());
-          }
         },
         backgroundColor: Colors.yellowAccent,
         child: const Icon(Icons.add, color: Colors.black),

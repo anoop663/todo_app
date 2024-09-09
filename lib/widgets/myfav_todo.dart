@@ -17,14 +17,13 @@ class MyFav extends StatelessWidget {
           builder: (context, state) {
             int todoCount = 0;
             if (state is TodoLoaded) {
-              // Count only 'is_personal: true' items
               todoCount =
                   state.todos.where((todo) => todo['is_personal'] == true).length;
             }
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Favorite Todos'),
+                const Text('Favorite Tasks'),
                 Chip(
                   label: Text(
                     '$todoCount',
@@ -55,7 +54,6 @@ class MyFav extends StatelessWidget {
           if (state is TodoLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is TodoLoaded) {
-            // Filter to show only 'is_personal == true' items, regardless of 'is_done'
             final favoriteTodos = state.todos
                 .where((todo) => todo['is_personal'] == true)
                 .toList();
@@ -219,11 +217,6 @@ class MyFav extends StatelessWidget {
               ),
             ),
           );
-
-          if (result == true) {
-            // ignore: use_build_context_synchronously
-            context.read<TodoBloc>().add(LoadTodos());
-          }
         },
         backgroundColor: Colors.yellowAccent,
         child: const Icon(Icons.add, color: Colors.black),
