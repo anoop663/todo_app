@@ -24,7 +24,7 @@ class TodoListPage extends StatelessWidget {
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Incomplete Tasks'),
+                const Text('Pending Tasks'),
                 Chip(
                   label: Text(
                     '$incompleteCount',

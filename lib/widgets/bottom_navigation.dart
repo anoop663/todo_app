@@ -6,6 +6,7 @@ import 'package:flutter_application_todo/widgets/list_todo_page.dart';
 import 'package:flutter_application_todo/widgets/myfav_todo.dart';
 
 class BottomNavigate extends StatelessWidget {
+  
   final PageController _pageController = PageController();
 
   BottomNavigate({super.key});
@@ -40,7 +41,7 @@ class BottomNavigate extends StatelessWidget {
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.list),
-                label: 'List',
+                label: 'Pending',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.favorite),
