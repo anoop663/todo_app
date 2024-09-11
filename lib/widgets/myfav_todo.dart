@@ -210,10 +210,10 @@ class MyFav extends StatelessWidget {
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
             ),
-            builder: (context) => const FractionallySizedBox(
+            builder: (context) =>  FractionallySizedBox(
               heightFactor: 0.75,
               child: AddTodoPage(
-                todo: {},
+                
               ),
             ),
           );

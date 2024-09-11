@@ -7,21 +7,18 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:intl/intl.dart';
 
 class AddTodoPage extends StatelessWidget {
-  final Map<String, dynamic> todo;
+  AddTodoPage({super.key});
 
-  const AddTodoPage({super.key, required this.todo});
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+  final DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
 
   @override
   Widget build(BuildContext context) {
-    final nameController = TextEditingController(text: todo['name']);
-    final descriptionController =
-        TextEditingController(text: todo['description']);
-    final dateController = TextEditingController(text: todo['completed_at']);
-    final DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Todo'),
+        title: const Text('Create Todo'),
         backgroundColor: Colors.yellowAccent,
       ),
       body: Padding(
@@ -39,87 +36,61 @@ class AddTodoPage extends StatelessWidget {
               );
             }
           },
-          child: BlocBuilder<TodoBloc, TodoState>(
-            builder: (context, state) {
-              if (state is FormState1) {
-                nameController.text = state.title;
-                descriptionController.text = state.description;
-                dateController.text = state.date;
-              }
+          child: Column(
+            children: [
+              TextFormField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Name'),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: descriptionController,
+                decoration: const InputDecoration(labelText: 'Description'),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: dateController,
+                decoration: const InputDecoration(labelText: 'Due date'),
+                readOnly: true,
+                onTap: () {
+                  DatePicker.showDateTimePicker(
+                    context,
+                    showTitleActions: true,
+                    onConfirm: (date) {
+                      final formattedDate = dateFormat.format(date);
+                      dateController.text = formattedDate;
+                    },
+                    currentTime: DateTime.now(),
+                    locale: LocaleType.en,
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
 
-              return Column(
-                children: [
-                  TextFormField(
-                    controller: nameController,
-                    decoration: const InputDecoration(labelText: 'Name'),
-                    onFieldSubmitted: (value) {
-                      context.read<TodoBloc>().add(FormUpdated(
-                            title: value,
-                            description: descriptionController.text,
-                            date: dateController.text,
-                          ));
-                    },
-                  ),
-                  TextFormField(
-                    controller: descriptionController,
-                    decoration: const InputDecoration(labelText: 'Description'),
-                    onFieldSubmitted: (value) {
-                      context.read<TodoBloc>().add(FormUpdated(
+              ElevatedButton(
+                onPressed: () {
+                  final date = DateTime.tryParse(dateController.text);
+                  if (date != null) {
+                    context.read<TodoBloc>().add(
+                          AddTodo(
                             title: nameController.text,
-                            description: value,
-                            date: dateController.text,
-                          ));
-                    },
-                  ),
-                  TextFormField(
-                    controller: dateController,
-                    decoration: const InputDecoration(labelText: 'Due date'),
-                    readOnly: true,
-                    onTap: () {
-                      DatePicker.showDateTimePicker(
-                        context,
-                        showTitleActions: true,
-                        onConfirm: (date) {
-                          final formattedDate = dateFormat.format(date);
-                          dateController.text = formattedDate;
-                          context.read<TodoBloc>().add(FormUpdated(
-                                title: nameController.text,
-                                description: descriptionController.text,
-                                date: dateController.text,
-                              ));
-                        },
-                        currentTime: DateTime.now(),
-                        locale: LocaleType.en,
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      final date = DateTime.tryParse(dateController.text);
-                      if (date != null) {
-                        context.read<TodoBloc>().add(
-                              AddTodo(
-                                title: nameController.text,
-                                description: descriptionController.text,
-                                date: dateFormat.format(date),
-                              ),
-                            );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Invalid date format')),
+                            description: descriptionController.text,
+                            date: dateFormat.format(date),
+                          ),
                         );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellowAccent,
-                      foregroundColor: Colors.black,
-                    ),
-                    child: const Text('Add Todo'),
-                  ),
-                ],
-              );
-            },
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Invalid date format')),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellowAccent,
+                  foregroundColor: Colors.black,
+                ),
+                child: const Text('Create Todo'),
+              ),
+            ],
           ),
         ),
       ),
