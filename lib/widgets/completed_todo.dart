@@ -55,7 +55,6 @@ class CompletedTodo extends StatelessWidget {
           if (state is TodoLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is TodoLoaded) {
-            // Filter todos where is_done is true (completed tasks)
             final completedTodos = state.todos
                 .where((todo) => todo['is_done'] ?? false)
                 .toList();
